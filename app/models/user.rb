@@ -2,6 +2,8 @@ class User < ApplicationRecord
   has_many :messages
   has_many :meetups, through: :messages
 
+  has_many :positions
+
   validates :username, presence: true, uniqueness: true
  
   # Include default devise modules. Others available are:

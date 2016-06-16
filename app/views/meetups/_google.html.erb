@@ -100,6 +100,71 @@ async defer></script> %>
 			map.controls[google.maps.ControlPosition.TOP_LEFT].push(draggableControlDiv);
 
             ///////////////////////////////////////////////////////////////////
+			// get the current positions and setup markers for them          //
+            ///////////////////////////////////////////////////////////////////
+			$.getJSON('/positions', function(response) {
+			return $.each(response, function(i, el) {
+				var map_marker;
+				map_marker = new google.maps.Marker({
+				position: { 
+					lat: el.latitude,
+					lng: el.longitude
+				},
+				map: window.map,
+				animation: google.maps.Animation.DROP,
+				draggable: true,
+				title: el.id + ' ' + el.address + ' ' + el.zipcode
+				});
+				map_marker.set('id', el.id);
+				window.map_markers.push(map_marker);
+				
+				///////////////////////////////////////////////////////////////
+				google.maps.event.addListener(map_marker, 'dragend', function(event) 
+					{
+					var hdr, id, lat, lng, msg, record;
+					
+					id  = this.get('id');
+					lat = event.latLng.lat();
+					lng = event.latLng.lng();
+					
+					record = { id: id, latitude: lat, longitude: lng };
+					hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
+					msg = { hdr: hdr, body: { position: record }
+					};
+				
+				    App.positions.send_msg(msg);
+				});
+
+				///////////////////////////////////////////////////////////////
+				google.maps.event.addListener(map_marker, 'drag', function(event) {
+				var hdr, id, lat, lng, msg, record;
+				id = this.get('id');
+				lat = event.latLng.lat();
+				lng = event.latLng.lng();
+				record = {
+					id: id,
+					latitude: lat,
+					longitude: lng
+				};
+				hdr = {
+					to: 'server',
+					from: App.endpoint_uuid,
+					type: 'live_data',
+					subtype: 'update',
+					record: 'position'
+				};
+				msg = {
+					hdr: hdr,
+					body: {
+					position: record
+					}
+				};
+				App.positions.send_msg(msg);
+				});
+			  });
+			});
+
+            ///////////////////////////////////////////////////////////////////
 			// Try W3C Geolocation (Preferred)                               //
             ///////////////////////////////////////////////////////////////////
 			if (navigator.geolocation) 
@@ -119,6 +184,10 @@ async defer></script> %>
 					title: "pc"
 //					title: '"' + current_user.username + '"'
 				  });
+				
+				//map_marker.set('id', current_user.id);
+				  map_marker.set('id', "00000000-0000-0000-0000-000000000000");
+			////////	  window.map_markers.push(map_marker);
 					
 ////			  google.maps.event.addListener(the_marker, 'click', buildHandler(map, the_infowindow, the_marker));
 
@@ -128,10 +197,23 @@ async defer></script> %>
 					 // console.log("Got a marker drag.");
 					} );
 
-				  google.maps.event.addListener(map_marker,'dragend', 
-				    function(event) {
-					//console.log('Drag end ' + event.latLng.lat() + ' ' + event.latLng.lng() );
-					} );					
+				  ///////////////////////////////////////////////////////////////
+				  google.maps.event.addListener(map_marker, 'dragend', function(event) 
+				  	{
+				  	console.log('dragend ' + event.latLng.lat() + ' ' + event.latLng.lng() );
+					var hdr, id, lat, lng, msg, record;
+					
+					id  = this.get('id');
+					lat = event.latLng.lat();
+					lng = event.latLng.lng();
+					
+					record = { id: id, latitude: lat, longitude: lng };
+					hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
+					msg = { hdr: hdr, body: { position: record }
+					};
+				
+					App.positions.send_msg(msg);
+				  });
 				}, 
 				function() { alert("Geolocation service failed."); } );
 			}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160616050843) do
+ActiveRecord::Schema.define(version: 20160616082809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,12 +26,20 @@ ActiveRecord::Schema.define(version: 20160616050843) do
 
   create_table "messages", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "content"
-    t.uuid     "user_id"
-    t.uuid     "meetup_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["meetup_id"], name: "index_messages_on_meetup", using: :btree
-    t.index ["user_id"], name: "index_messages_on_user", using: :btree
+    t.uuid     "meetup_id"
+    t.uuid     "user_id"
+  end
+
+  create_table "positions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.integer  "position_type"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.uuid     "user_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["user_id"], name: "index_positions_on_user_id", using: :btree
   end
 
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
