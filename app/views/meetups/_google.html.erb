@@ -1,0 +1,206 @@
+<div id="map" class="google-map-canvas" style="background-color: lightgray"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9GE8UaA4r9KWATXxIgzkOTti8pXp8fiA" type="text/javascript"></script>
+
+<%# <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9GE8UaA4r9KWATXxIgzkOTti8pXp8fiA&callback=initMap"
+async defer></script> %>
+
+<script type="text/javascript">
+//<!--
+		// this is called when the page loads. 
+		// it initializes the map, and creates each marker
+		$(document).ready(function()
+		{   
+		    var map          = null;
+			var mapOptions   = null;
+			var mapDraggable = true; 
+	        var map_marker   = null;
+
+			function resizeBootstrapMap() 
+			{
+			  // TODO walk the actual parent/s, rather than by class
+			  var mapParentWidth  = $('.google-map-col').width();
+			  var mapParentHeight = $('.google-map-row').height();
+			  
+			  console.log('resize map w=' + mapParentWidth + ' h=' + mapParentHeight);
+
+			  $('#map').width(mapParentWidth);
+			  $('#map').height(mapParentHeight);
+			  google.maps.event.trigger($('#map'), 'resize');
+//			  map.fitBounds(mapBounds);
+			}
+
+	  		// Create a terrain style map
+	  	    mapOptions = 
+			{
+		      mapTypeId: google.maps.MapTypeId.ROADMAP,
+		      center: {lat: -23.881733, lng: 151.195264},
+              zoom: 16,
+			  draggable: mapDraggable,
+		      scrollwheel: true,
+		      zoomControl: true,
+		      streetViewControl: true,
+		      mapTypeControl: true,
+		      panControl: true
+		    };
+
+			// The draggableControl adds a control to the map that controls the map's draggability
+			// This constructor takes the control DIV as an argument @constructor
+			function draggableControl(controlDiv, map) 
+			{
+				// Set CSS for the control border.
+				var controlUI = document.createElement('div');
+				
+				controlUI.style.backgroundColor = '#fff';
+				controlUI.style.border          = '2px solid #fff';
+				controlUI.style.borderRadius    = '3px';
+				controlUI.style.boxShadow       = '0 2px 6px rgba(0,0,0,.3)';
+				controlUI.style.cursor          = 'pointer';
+				controlUI.style.marginTop       = '10px';
+			    controlUI.style.marginLeft      = '-9px';
+				controlUI.style.textAlign       = 'center';
+				controlUI.title                 = mapDraggable ? 'Click to lock the map' : 'Click to unlock the map';
+				
+				controlDiv.appendChild(controlUI);
+
+				// Set CSS for the control interior.
+				var controlText = document.createElement('div');
+				
+				controlText.style.color        = 'rgb(25,25,25)';
+		      //controlText.style.fontFamily   = 'Roboto,Arial,sans-serif';
+				controlText.style.fontSize     = '10px';
+				controlText.style.lineHeight   = '27px';
+				controlText.style.paddingLeft  = '5px';
+				controlText.style.paddingRight = '5px';
+				controlText.innerHTML          = mapDraggable ? 'Lock' : 'Unlock';
+				
+				controlUI.appendChild(controlText);
+
+				// Setup the click event listeners
+				controlUI.addEventListener('click', function() 
+				{
+				  mapDraggable = !mapDraggable;
+
+				  controlUI.title       = mapDraggable ? 'Click to lock the map' : 'Click to unlock the map';
+				  controlText.innerHTML = mapDraggable ? 'Lock' : 'Unlock'; 
+
+				  map.setOptions({draggable: mapDraggable});
+				});
+
+			}
+
+		    map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+			// Create the DIV to hold the control and call the 
+			// draggableControl() constructor passing in this DIV.
+			var draggableControlDiv = document.createElement('div');
+			var draggableControl = new draggableControl(draggableControlDiv, map);
+
+			draggableControlDiv.index = 1;
+			map.controls[google.maps.ControlPosition.TOP_LEFT].push(draggableControlDiv);
+
+            ///////////////////////////////////////////////////////////////////
+			// Try W3C Geolocation (Preferred)                               //
+            ///////////////////////////////////////////////////////////////////
+			if (navigator.geolocation) 
+			{
+				navigator.geolocation.getCurrentPosition(function(position) 
+				{
+				  initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+					
+				//console.log('position.coords.accuracy=' + position.coords.accuracy);
+
+				  map.setCenter(initialLocation);
+
+				  map_marker = new google.maps.Marker({
+					position: initialLocation,
+					map: map,
+					draggable:true,
+					title: "pc"
+//					title: '"' + current_user.username + '"'
+				  });
+					
+////			  google.maps.event.addListener(the_marker, 'click', buildHandler(map, the_infowindow, the_marker));
+
+				  google.maps.event.addListener(map_marker, 'drag', 
+				    function()
+					{
+					 // console.log("Got a marker drag.");
+					} );
+
+				  google.maps.event.addListener(map_marker,'dragend', 
+				    function(event) {
+					//console.log('Drag end ' + event.latLng.lat() + ' ' + event.latLng.lng() );
+					} );					
+				}, 
+				function() { alert("Geolocation service failed."); } );
+			}
+			else 
+			{
+			  alert("Your browser doesn't support geolocation.");
+			}
+
+			////var mapBounds = new google.maps.LatLngBounds();
+
+		    // for overlays now do this:
+			// http://code.google.com/apis/maps/documentation/javascript/overlays.html#InfoWindows
+
+			// consider ajax load of info windows using this:
+			// http://stackoverflow.com/questions/3381700/google-maps-v3-loading-infowindow-content-via-ajax
+
+			$.ajax({
+				url: '<%= locations_json_url %>',
+				error: function() { console.log("error "); },               
+				success: function(results) {
+					console.log('retrieved map info');
+
+					for (var i = 0; i < results.length; i++) {
+						var location = results[i];
+
+						if (location.latitude != 0 && location.longitude != 0) 
+						{
+							locationMarker = new google.maps.LatLng(location.latitude, location.longitude);
+                        ////mapBounds.extend(locationMarker);
+
+							var contentString = '<div><a href="/locations/' + location.id + '">' + location.name + '</a></div>' +
+								'<div>' + location.notes + '</div>';
+
+							var the_infowindow = new google.maps.InfoWindow({
+								content: contentString
+							});
+
+							function buildHandler(map, infowindow, marker) {
+							    return function() {
+							        infowindow.open(map, marker);
+							    };
+							};
+
+							var the_marker = new google.maps.Marker({
+								position: locationMarker,
+								map: map,
+								title: location.name
+							});
+
+							google.maps.event.addListener(the_marker, 'click', buildHandler(map, the_infowindow, the_marker));
+						}
+
+					}
+
+				    resizeBootstrapMap();
+				}
+			});
+
+			// resize the map on startup
+		    resizeBootstrapMap();
+
+		    // resize the map whenever the window resizes
+			$(window).resize(resizeBootstrapMap);
+
+			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+				console.log('WOOOOO');
+			    resizeBootstrapMap();
+			});
+      })    
+//-->
+</script>                   
+

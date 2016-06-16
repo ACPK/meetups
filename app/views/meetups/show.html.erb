@@ -1,0 +1,27 @@
+<div class="row google-map-row">
+
+  <div class='google-map-col col-md-6'>
+    <%= render :partial => 'meetups/google', :locals => { :map_width => 480, :map_height => 480, :locations_json_url => '' } %>
+  </div>
+
+  <div class="col-md-6">
+    <h1><%= @meetup.topic %></h1>
+
+    <div class="panel panel-default">
+      <% if @meetup.messages.any? %>
+        <div class="panel-body" id="messages">
+          <%= render partial: 'messages/message', collection: @meetup.messages%>
+        </div>
+      <%else%>
+        <div class="panel-body hidden" id="messages">
+        </div>
+      <%end%>
+    </div>
+
+    <%= render partial: 'messages/message_form', locals: {message: @message, meetup: @meetup}%>
+  </div>
+
+</div> <!--row-->
+
+
+

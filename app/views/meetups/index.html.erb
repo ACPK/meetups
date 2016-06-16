@@ -1,0 +1,17 @@
+<div class="row col-md-8 col-md-offset-2" id="meetup-title">
+  <h1>Meetups</h1>
+</div>
+
+<div class="row col-md-8 col-md-offset-2" id="meetups">
+  <%= render partial: 'meetup_form', locals: {meetup: @meetup} %>
+  <div id="meetup-errors">
+    
+  </div>
+    <ul id="meetup-index"> 
+  <% if @meetups.any? %>
+      <%= render @meetups%>
+  <%else %>
+    <p>Be the first one to make a meetup!</p>
+  <% end %>
+    </ul>
+</div>

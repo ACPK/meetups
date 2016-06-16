@@ -1,0 +1,23 @@
+<div class="jumbotron">
+  <h1>Welcome to Meetups!</h1>
+  <p>The future of live messaging and location sharing</p>
+  <%if current_user%>
+    <p><span class="glyphicon glyphicon-heart"></span> Nice to see you, <%= current_user.username%> <span class="glyphicon glyphicon-heart"></span></p>
+  <%end%>
+  <p>Sign up or log in, then create a meetup or browse existing meetups to start chatting.</p>
+</div>
+
+<h1>Home#index</h1>
+
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
+
+<p> UserType is <%= current_user ? (current_user.user_type):('Not signed in') %>  </p>
+
+<%= link_to "sign in", :new_user_session %>
+<br/>
+<%= link_to "sign out", :destroy_user_session, method: :delete %>
+<br/>
+<%= link_to "sign up as a user", new_user_registration_path(:user_type => 'User')  %>
+<br/>

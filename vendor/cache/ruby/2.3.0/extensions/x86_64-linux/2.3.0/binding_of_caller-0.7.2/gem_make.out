@@ -1,0 +1,16 @@
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+/home/peter/.rvm/rubies/ruby-2.3.1/bin/ruby -r ./siteconf20160614-17375-1am6ucz.rb extconf.rb
+
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+make "DESTDIR=" clean
+make: *** No rule to make target `clean'.  Stop.
+
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+make "DESTDIR="
+echo "Nada."
+Nada.
+
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+make "DESTDIR=" install
+echo "Nada."
+Nada.

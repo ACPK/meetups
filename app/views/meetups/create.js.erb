@@ -1,0 +1,3 @@
+$("input#meetup_topic").val(" ")
+$("#meetup-errors").html(" ")
+$("#meetup-index").append('<li><%= link_to @meetup.topic, meetup_path(@meetup) %></li>')

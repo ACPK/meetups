@@ -1,0 +1,23 @@
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/debase-0.2.1/ext
+/home/peter/.rvm/rubies/ruby-2.3.1/bin/ruby -r ./siteconf20160614-17375-11vory4.rb extconf.rb
+checking for vm_core.h... yes
+creating Makefile
+
+To see why this extension failed to compile, please check the mkmf.log which can be found here:
+
+  /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/extensions/x86_64-linux/2.3.0/debase-0.2.1/mkmf.log
+
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/debase-0.2.1/ext
+make "DESTDIR=" clean
+
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/debase-0.2.1/ext
+make "DESTDIR="
+compiling breakpoint.c
+compiling debase_internals.c
+compiling context.c
+compiling locker.c
+linking shared-object debase_internals.so
+
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/debase-0.2.1/ext
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 debase_internals.so ./.gem.20160614-17375-rb61wy

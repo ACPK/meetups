@@ -1,0 +1,33 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+
+// all map containers must be full height 
+html, body, .container-fluid {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}      
+     
+.navbar {
+  margin: 0;
+  padding: 0;
+}      
+
+.google-map-row {
+  height: calc(100% - 52px); 
+  margin: 0;
+  padding: 0;
+}
+
+.google-map-col {
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+}
+
+.google-map-canvas {
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+}      

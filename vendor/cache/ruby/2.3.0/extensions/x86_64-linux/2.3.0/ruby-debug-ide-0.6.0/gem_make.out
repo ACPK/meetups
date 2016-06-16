@@ -1,0 +1,7 @@
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/ruby-debug-ide-0.6.0/ext
+/home/peter/.rvm/rubies/ruby-2.3.1/bin/ruby mkrf_conf.rb
+Installing base gem
+Building native extensions.  This could take a while...
+
+current directory: /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/ruby-debug-ide-0.6.0/ext
+/home/peter/.rvm/rubies/ruby-2.3.1/bin/ruby -rubygems /home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/gems/rake-11.2.2/exe/rake RUBYARCHDIR=/home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/extensions/x86_64-linux/2.3.0/ruby-debug-ide-0.6.0 RUBYLIBDIR=/home/peter/apps/FastTrack/railsexercises/meetup/vendor/cache/ruby/2.3.0/extensions/x86_64-linux/2.3.0/ruby-debug-ide-0.6.0
