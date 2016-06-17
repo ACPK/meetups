@@ -11,34 +11,33 @@ class PositionsChannel < ApplicationCable::Channel
   end
 
   def recv_msg(data)
-    message = data['message']
+    #logger.debug(data)
+    raw_message = data['message'].to_json
 
-    logger.debug(message)
-
-    hdr   = message['hdr']
-    body  = message['body']
-
-    if (hdr['type'] == 'data')
-      if (hdr['subtype'] == 'update')
-        if (hdr['record'] == 'position')
-          update_position_position(body['position'])
+    begin
+      message = JSON.parse(raw_message, object_class: OpenStruct)
+    rescue JSON.parse_error => ex
+      logger.warn("Attempted to decode invalid JSON message: #{raw_message}")
+    else
+      if (message.hdr.type == 'data')
+        if (message.hdr.subtype == 'update')
+          if (message.hdr.record == 'position')
+            update_position_position(message.body.position)
+          end
         end
+      elsif (message.hdr.type == 'live_data')
+        PositionsChannel.broadcast_msg(message)
       end
-    elsif (hdr['type'] == 'live_data')
-      PositionsChannel.broadcast_msg(message)
     end
 
   end
 
   def update_position_position(position)
+    
     begin
-      id  = position['id']
-      lat = position['latitude']
-      lng = position['longitude']
+      @position = Position.find(position.id)
 
-      @position = Position.find(id)
-
-      position_params = { latitude: lat, longitude: lng }
+      position_params = { latitude: position.latitude, longitude: position.longitude }
     
       if @position.update(position_params)
         logger.debug("succeeded in updating position location")
