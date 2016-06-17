@@ -6,9 +6,10 @@
 async defer></script> %>
 
 <script type="text/javascript">
-//<!--
+
 		// this is called when the page loads. 
 		// it initializes the map, and creates each marker
+
 		$(document).ready(function()
 		{   
 		    var map          = null;
@@ -89,7 +90,7 @@ async defer></script> %>
 
 			}
 
-		    map = new google.maps.Map(document.getElementById("map"), mapOptions);
+		    window.map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
 			// Create the DIV to hold the control and call the 
 			// draggableControl() constructor passing in this DIV.
@@ -97,69 +98,59 @@ async defer></script> %>
 			var draggableControl = new draggableControl(draggableControlDiv, map);
 
 			draggableControlDiv.index = 1;
-			map.controls[google.maps.ControlPosition.TOP_LEFT].push(draggableControlDiv);
+			window.map.controls[google.maps.ControlPosition.TOP_LEFT].push(draggableControlDiv);
 
             ///////////////////////////////////////////////////////////////////
 			// get the current positions and setup markers for them          //
             ///////////////////////////////////////////////////////////////////
+            window.map_markers = Array();
+
+		  //$.getJSON('/users', function(response) {
+		  //}
+
 			$.getJSON('/positions', function(response) {
-			return $.each(response, function(i, el) {
+			  return $.each(response, function(i, el) {
 				var map_marker;
 				map_marker = new google.maps.Marker({
-				position: { 
-					lat: el.latitude,
-					lng: el.longitude
-				},
+				position: {	lat: el.latitude, lng: el.longitude	},
 				map: window.map,
 				animation: google.maps.Animation.DROP,
 				draggable: true,
-				title: el.id + ' ' + el.address + ' ' + el.zipcode
+				title: el.username
 				});
+
 				map_marker.set('id', el.id);
 				window.map_markers.push(map_marker);
 				
 				///////////////////////////////////////////////////////////////
 				google.maps.event.addListener(map_marker, 'dragend', function(event) 
-					{
-					var hdr, id, lat, lng, msg, record;
+				{
+					var id  = this.get('id');
+					var lat = event.latLng.lat();
+					var lng = event.latLng.lng();
 					
-					id  = this.get('id');
-					lat = event.latLng.lat();
-					lng = event.latLng.lng();
-					
-					record = { id: id, latitude: lat, longitude: lng };
-					hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
-					msg = { hdr: hdr, body: { position: record }
+					var record = { user_id: id, latitude: lat, longitude: lng };
+					var hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
+					var msg = { hdr: hdr, body: { position: record }
 					};
 				
 				    App.positions.send_msg(msg);
 				});
 
 				///////////////////////////////////////////////////////////////
-				google.maps.event.addListener(map_marker, 'drag', function(event) {
-				var hdr, id, lat, lng, msg, record;
-				id = this.get('id');
-				lat = event.latLng.lat();
-				lng = event.latLng.lng();
-				record = {
-					id: id,
-					latitude: lat,
-					longitude: lng
-				};
-				hdr = {
-					to: 'server',
-					from: App.endpoint_uuid,
-					type: 'live_data',
-					subtype: 'update',
-					record: 'position'
-				};
-				msg = {
-					hdr: hdr,
-					body: {
-					position: record
-					}
-				};
-				App.positions.send_msg(msg);
+				google.maps.event.addListener(map_marker, 'drag', function(event) 
+				{
+					var hdr, id, lat, lng, msg, record;
+					id = this.get('id');
+					lat = event.latLng.lat();
+					lng = event.latLng.lng();
+					
+					record = { user_id: id, latitude: lat, longitude: lng };
+					hdr    = { to: 'server', from: App.endpoint_uuid, type: 'live_data', subtype: 'update',	record: 'position' };
+					msg    = { hdr: hdr, body: { position: record }
+					};
+					
+					App.positions.send_msg(msg);
 				});
 			  });
 			});
@@ -175,45 +166,18 @@ async defer></script> %>
 					
 				//console.log('position.coords.accuracy=' + position.coords.accuracy);
 
-				  map.setCenter(initialLocation);
+				  window.map.setCenter(initialLocation);
 
-				  map_marker = new google.maps.Marker({
-					position: initialLocation,
-					map: map,
-					draggable:true,
-					title: "pc"
-//					title: '"' + current_user.username + '"'
-				  });
+				  id  = "00000000-0000-0000-0000-000000000000";
+				  lat = initialLocation.lat();
+				  lng = initialLocation.lng();
 				
-				//map_marker.set('id', current_user.id);
-				  map_marker.set('id', "00000000-0000-0000-0000-000000000000");
-			////////	  window.map_markers.push(map_marker);
-					
-////			  google.maps.event.addListener(the_marker, 'click', buildHandler(map, the_infowindow, the_marker));
-
-				  google.maps.event.addListener(map_marker, 'drag', 
-				    function()
-					{
-					 // console.log("Got a marker drag.");
-					} );
-
-				  ///////////////////////////////////////////////////////////////
-				  google.maps.event.addListener(map_marker, 'dragend', function(event) 
-				  	{
-				  	console.log('dragend ' + event.latLng.lat() + ' ' + event.latLng.lng() );
-					var hdr, id, lat, lng, msg, record;
-					
-					id  = this.get('id');
-					lat = event.latLng.lat();
-					lng = event.latLng.lng();
-					
-					record = { id: id, latitude: lat, longitude: lng };
-					hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
-					msg = { hdr: hdr, body: { position: record }
-					};
-				
-					App.positions.send_msg(msg);
-				  });
+				  record = { user_id: id, latitude: lat, longitude: lng };
+				  hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
+				  msg = { hdr: hdr, body: { position: record }
+				  };
+			
+				  App.positions.send_msg(msg);
 				}, 
 				function() { alert("Geolocation service failed."); } );
 			}
@@ -221,56 +185,6 @@ async defer></script> %>
 			{
 			  alert("Your browser doesn't support geolocation.");
 			}
-
-			////var mapBounds = new google.maps.LatLngBounds();
-
-		    // for overlays now do this:
-			// http://code.google.com/apis/maps/documentation/javascript/overlays.html#InfoWindows
-
-			// consider ajax load of info windows using this:
-			// http://stackoverflow.com/questions/3381700/google-maps-v3-loading-infowindow-content-via-ajax
-
-			$.ajax({
-				url: '<%= locations_json_url %>',
-				error: function() { console.log("error "); },               
-				success: function(results) {
-					console.log('retrieved map info');
-
-					for (var i = 0; i < results.length; i++) {
-						var location = results[i];
-
-						if (location.latitude != 0 && location.longitude != 0) 
-						{
-							locationMarker = new google.maps.LatLng(location.latitude, location.longitude);
-                        ////mapBounds.extend(locationMarker);
-
-							var contentString = '<div><a href="/locations/' + location.id + '">' + location.name + '</a></div>' +
-								'<div>' + location.notes + '</div>';
-
-							var the_infowindow = new google.maps.InfoWindow({
-								content: contentString
-							});
-
-							function buildHandler(map, infowindow, marker) {
-							    return function() {
-							        infowindow.open(map, marker);
-							    };
-							};
-
-							var the_marker = new google.maps.Marker({
-								position: locationMarker,
-								map: map,
-								title: location.name
-							});
-
-							google.maps.event.addListener(the_marker, 'click', buildHandler(map, the_infowindow, the_marker));
-						}
-
-					}
-
-				    resizeBootstrapMap();
-				}
-			});
 
 			// resize the map on startup
 		    resizeBootstrapMap();
@@ -283,6 +197,5 @@ async defer></script> %>
 			    resizeBootstrapMap();
 			});
       })    
-//-->
 </script>                   
 
