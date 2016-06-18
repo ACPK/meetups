@@ -63,7 +63,9 @@ class PositionsChannel < ApplicationCable::Channel
         end
       elsif (message.hdr.type == 'live_data')
         #logger.debug('PositionsChannel rebroadcasting live_data')
-
+        
+        # TODO queue these and delete old if we are running behind
+        # TODO can we do this on a per connection basis ???
         PositionsChannel.broadcast_msg(data['message'])
       end
     end

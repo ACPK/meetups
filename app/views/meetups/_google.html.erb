@@ -116,13 +116,13 @@ async defer></script> %>
 					if (map_marker.id == user.id)
 					{
 						bFound = true
-						console.log('AJAX users return - found matching marker - NOT adding new marker ' + user.username + ' ' + user.id);
+						//console.log('users return/update - found matching marker - NOT adding new marker ' + user.username + ' ' + user.id);
 					}          
 			    }
 
 				if (!bFound)
 				{
-					console.log('AJAX users return - matching marker NOT found - adding new marker ' + user.username + ' ' + user.id);
+					//console.log('users return/update - matching marker NOT found - adding new marker ' + user.username + ' ' + user.id);
 					
 					map_marker = new google.maps.Marker({
 					map: window.map,
@@ -181,7 +181,7 @@ async defer></script> %>
 					if (map_marker.id == position.user_id)
 					{
 						bFound = true
-						console.log('AJAX positions return - found matching marker - updating position ' + map_marker.title + ' ' + position.user_id + ' ' + position.latitude + ' ' + position.longitude);
+						//console.log('positions return/update - found matching marker - updating position ' + map_marker.title + ' ' + position.user_id + ' ' + position.latitude + ' ' + position.longitude);
 						newLatLng = new google.maps.LatLng(position.latitude, position.longitude);
 						map_marker.setPosition(newLatLng);
 					}          
@@ -189,23 +189,23 @@ async defer></script> %>
 
 				if (!bFound)
 				{
-					console.log('AJAX positions return - matching marker NOT found - NOT updating marker position ' + position.user_id + ' ' + position.latitude + ' ' + position.longitude);
+					//console.log('positions return/update - matching marker NOT found - NOT updating marker position ' + position.user_id + ' ' + position.latitude + ' ' + position.longitude);
 				}
 			};
 
             ///////////////////////////////////////////////////////////////////
 			// get the current positions and setup markers for them          //
-			// TODO do this thru the position channel                        //
+			// TODO do this thru the position channel rather than by AJAX    //
             ///////////////////////////////////////////////////////////////////
 			$.getJSON('/positions/users_for_current_positions.json', function(response) {
 			  return $.each(response, function(i, user) {
-				window.updateMarker2(user);
+				window.updateMarker(user);
 			  });
 			});
 
 			$.getJSON('/positions/current_positions.json', function(response) {
 			  return $.each(response, function(i, position) {
-				window.updateMarkerPosition2(position);
+				window.updateMarkerPosition(position);
 			  });
 			});
 
