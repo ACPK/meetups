@@ -1,6 +1,28 @@
 class PositionsController < ApplicationController
   before_action :set_position, only: [:show, :edit, :update, :destroy]
 
+  # GET /users_for_current_positions.json
+  def users_for_current_positions
+    @users = User.all
+
+    respond_to do |format|
+      format.html { head :not_acceptable }
+      format.json { render json: @users, status: :ok }
+    end
+  end
+
+  # GET /current_positions.json
+  def current_positions
+    @positions = Position.all
+
+    respond_to do |format|
+      format.html { head :not_acceptable }
+      format.json { render json: @positions, status: :ok }
+    end
+  end
+
+  ###########################
+
   # GET /positions
   # GET /positions.json
   def index

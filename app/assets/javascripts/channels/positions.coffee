@@ -57,6 +57,29 @@ $ ->
         window.map_markers.push(map_marker)
 
         #/////////////////////////////////////////////////////////////
+        google.maps.event.addListener map_marker, 'drag', (event) ->
+          id = @get('id')
+          id = map_marker.id
+          lat = event.latLng.lat()
+          lng = event.latLng.lng()
+          record = 
+            user_id: id
+            latitude: lat
+            longitude: lng
+          hdr = 
+            to: 'server'
+            from: App.endpoint_uuid
+            type: 'live_data'
+            subtype: 'update'
+            record: 'position'
+          msg = 
+            hdr: hdr
+            body: position: record
+          
+          App.positions.send_msg msg
+          return        
+      
+        #/////////////////////////////////////////////////////////////
         google.maps.event.addListener map_marker, 'dragend', (event) ->
           id = @get('id')
           id = map_marker.id
@@ -77,8 +100,8 @@ $ ->
             body: position: record
           
           App.positions.send_msg msg
-          return        
-      
+          return
+                  
     ######################
     ## helper functions ##
     ######################

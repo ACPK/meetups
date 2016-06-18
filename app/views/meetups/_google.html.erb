@@ -28,7 +28,7 @@ async defer></script> %>
 			  $('#map').width(mapParentWidth);
 			  $('#map').height(mapParentHeight);
 			  google.maps.event.trigger($('#map'), 'resize');
-//			  map.fitBounds(mapBounds);
+            //map.fitBounds(mapBounds);
 			}
 
 	  		// Create a terrain style map
@@ -68,7 +68,6 @@ async defer></script> %>
 				var controlText = document.createElement('div');
 				
 				controlText.style.color        = 'rgb(25,25,25)';
-		      //controlText.style.fontFamily   = 'Roboto,Arial,sans-serif';
 				controlText.style.fontSize     = '10px';
 				controlText.style.lineHeight   = '27px';
 				controlText.style.paddingLeft  = '5px';
@@ -108,19 +107,36 @@ async defer></script> %>
 		  //$.getJSON('/users', function(response) {
 		  //}
 
-			$.getJSON('/positions', function(response) {
-			  return $.each(response, function(i, el) {
-				var map_marker;
-				map_marker = new google.maps.Marker({
-				position: {	lat: el.latitude, lng: el.longitude	},
-				map: window.map,
-				animation: google.maps.Animation.DROP,
-				draggable: true,
-				title: el.username
-				});
+			$.getJSON('/positions/users_for_current_positions.json', function(response) {
+			  return $.each(response, function(i, user) {
+				var bFound     = false
+				var map_marker = null;
 
-				map_marker.set('id', el.id);
-				window.map_markers.push(map_marker);
+				for (var i = 0; !bFound && (i < window.map_markers.length); i++)
+				{
+					map_marker = window.map_markers[i]
+
+					if (map_marker.id == user.id)
+					{
+						bFound = true
+						console.log('AJAX users return - found matching marker - NOT adding new marker ' + user.username + ' ' + user.id);
+					}          
+			    }
+
+				if (!bFound)
+				{
+					console.log('AJAX users return - matching marker NOT found - adding new marker ' + user.username + ' ' + user.id);
+					
+					map_marker = new google.maps.Marker({
+					map: window.map,
+					draggable: true,
+					title: user.username
+					});
+
+					map_marker.set('id', user.id);
+
+					window.map_markers.push(map_marker);
+				}
 				
 				///////////////////////////////////////////////////////////////
 				google.maps.event.addListener(map_marker, 'dragend', function(event) 
@@ -152,6 +168,33 @@ async defer></script> %>
 					
 					App.positions.send_msg(msg);
 				});
+			  });
+			});
+
+            ///////////////////////////////////////////////////////////////////
+			$.getJSON('/positions/current_positions.json', function(response) {
+			  return $.each(response, function(i, position) {
+				var bFound     = false
+				var map_marker = null;
+
+				for (var i = 0; !bFound && (i < window.map_markers.length); i++)
+				{
+					map_marker = window.map_markers[i]
+
+					if (map_marker.id == position.user_id)
+					{
+						bFound = true
+						console.log('AJAX positions return - found matching marker - updating position ' + map_marker.title + ' ' + position.user_id + ' ' + position.latitude + ' ' + position.longitude);
+						newLatLng = new google.maps.LatLng(position.latitude, position.longitude);
+						map_marker.setPosition(newLatLng);
+					}          
+			    }
+
+				if (!bFound)
+				{
+					console.log('AJAX positions return - matching marker NOT found - NOT updating marker position ' + position.user_id + ' ' + position.latitude + ' ' + position.longitude);
+				}
+				
 			  });
 			});
 

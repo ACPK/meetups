@@ -62,16 +62,40 @@ class PositionsChannel < ApplicationCable::Channel
           end
         end
       elsif (message.hdr.type == 'live_data')
-        PositionsChannel.broadcast_msg(message)
+        #logger.debug('PositionsChannel rebroadcasting live_data')
+
+        PositionsChannel.broadcast_msg(data['message'])
       end
     end
 
   end
 
   #############################################################################
+  def get_online_users
+
+    connections =  ActionCable.server.remote_connections
+    
+    a = 1
+#    n = connections.count
+#    logger.debug(n + "users are online")
+    
+    # online_users = User.joins(:sessions).distinct
+
+    # logger.debug(online_users.count + "users are online")
+
+    # online_users.each do |user|
+    #   logger.debug("user " + user.username + " is online")
+    # end
+
+  end
+ 
+  #############################################################################
   def update_position_position(position)
     
     begin
+
+      online_users = get_online_users
+
       bSendUserRecord = false
 
       if (position.user_id == '00000000-0000-0000-0000-000000000000')
