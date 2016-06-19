@@ -96,16 +96,12 @@ class PositionsChannel < ApplicationCable::Channel
     
     begin
 
-      online_users = get_online_users
-
-      bSendUserRecord = false
+     #online_users = get_online_users
 
       if (position.user_id == '00000000-0000-0000-0000-000000000000')
-        bSendUserRecord = true
         position.user_id = current_user.id
       end
 
-      @user     = User.find(position.user_id)
       @position = Position.find_by(user_id: position.user_id)
 
       if (@position == nil)
@@ -118,10 +114,6 @@ class PositionsChannel < ApplicationCable::Channel
       if @position.update(position_params)
         logger.debug("succeeded in updating position location")
 
-       #if (bSendUserRecord)
-        if (true)
-          PositionsChannel.broadcast_record_update(@user)
-        end
         PositionsChannel.broadcast_record_update(@position)
       else
         logger.debug("failed in updating position location")
