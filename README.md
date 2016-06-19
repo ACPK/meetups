@@ -5,15 +5,15 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Ruby version 2.3.1 rails 5.0.0.rc1
 
-* System dependencies
+* System dependencies - actioncable via either async or redis
 
-* Configuration
+* Configuration - via ENV for both postgres and actioncable / redis
 
-* Database creation
+* Database creation - Postgres - rails db:schema:load
 
-* Database initialization
+* Database initialization - Postgres - no initialization required
 
 * How to run the test suite
 
@@ -21,4 +21,9 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+* ... This is a work in progress demo of google maps live position reporting
+* ... via action cable. With a secondary chat channel. The position channel
+* ... also contains a rudimentary bidirectional json / openstruct based messaging
+* ... system capable of broadcasting activerecord's. All records are uuid keyed
+* ... and it is possible for data to be generated and saved from the frontend
+   
