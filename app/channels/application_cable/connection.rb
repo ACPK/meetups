@@ -5,7 +5,10 @@ module ApplicationCable
 
     def connect
       self.current_user = find_verified_user
-      logger.add_tags current_user.username
+      
+      if (current_user)
+        logger.add_tags current_user.username
+      end
     end
 
     def disconnect
@@ -19,6 +22,7 @@ module ApplicationCable
           current_user
         else
           #reject_unauthorized_connection
+          current_user = nil
         end
       end
   end
