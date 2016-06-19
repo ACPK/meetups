@@ -1,19 +1,56 @@
-<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <%= link_to "Meetups", root_path, class: "navbar-brand" %>
-    </div>
+ <header id="header_wrapper">
+    <div class="container">
+      <div class="header_box">
+        <!-- <nav class="navbar navbar-inverse" role="navigation"> -->
+        <nav class="navbar navbar-light bg-faded">
+          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
+            &#9776;
+          </button>
+          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+            <a class="navbar-brand" href="/home/index">Brand</a>
+            <%#<img src="images/logo.png" alt="logo">%>
+            <ul class="nav navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" href="/home/index">Home <span class="sr-only">(current)</span></a>
+              </li>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <%= render partial: 'layouts/navbar_links' %>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+              <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+
+
+              <% if current_user %>
+                <li class="nav-item"><a class="nav-link" href="/meetups/new">new meetup</a></li> 
+                <li class="nav-item"><a class="nav-link" href="/meetups">meetups</a></li> 
+              <% end %>
+
+              <% if current_user %>
+                <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <%= current_user.username %>
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="nav-item"><a rel="nofollow" data-method="delete" href="/users/sign_out">Sign Out</a></li>
+                  </ul>
+                </li>
+              <% else %>
+                <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Not logged in
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link" href="/users/sign_in">Sign In</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="/users/sign_up">Sign Up</a></li> 
+                  </ul>
+                </li>
+              <% end %>
+
+
+            </ul>
+          </div>
+        </nav>     
+      </div>
+   </div>
+  </header>
+
+
