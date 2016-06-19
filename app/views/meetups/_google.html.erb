@@ -234,6 +234,49 @@ async defer></script> %>
 				  App.positions.send_msg(msg);
 				}, 
 				function() { alert("Geolocation service failed."); } );
+
+				///////////////////////////////////////////
+                var options = {enableHighAccuracy:true, timeout:15000, maximumAge:1000};
+                var watchID = navigator.geolocation.watchPosition(function(position) 
+				{ 
+				  id  = "00000000-0000-0000-0000-000000000000";
+				  lat = position.coords.latitude;
+				  lng = position.coords.longitude;
+				
+				  console.log('watchPosition reports ' + position.coords.latitude + ' ' + position.coords.longitude);
+
+				  record = { user_id: id, latitude: lat, longitude: lng };
+				  hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
+				  msg = { hdr: hdr, body: { position: record }
+				  };
+			
+				  App.positions.send_msg(msg);
+				}, 
+				function(error) 
+				{ 
+					switch(error.code) 
+					{
+						case error.PERMISSION_DENIED:
+							console.log('User denied the request for Geolocation.');
+							alert(      'User denied the request for Geolocation.');
+							break;
+						case error.POSITION_UNAVAILABLE:
+							console.log('Location information is unavailable.');
+							alert(      'Location information is unavailable.');
+							break;
+						case error.TIMEOUT:
+							console.log('The request to get user location timed out.');
+							alert(      'The request to get user location timed out.');
+							break;
+						case error.UNKNOWN_ERROR:
+						default:
+							console.log('An unknown error occurred in the request for Geolocation.');
+							alert(      'An unknown error occurred in the request for Geolocation.');
+							break;
+					} // switch(error.code)					
+				}, 
+				options );
+					
 			}
 			else 
 			{
