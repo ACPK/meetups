@@ -1,4 +1,5 @@
-@import "bootstrap-sprockets";
+@import "font-awesome-sprockets";
+@import "font-awesome";
 @import "bootstrap";
 
 
@@ -10,8 +11,8 @@ html, body, .container-fluid {
 }      
      
 .navbar {
-  margin: 0;
-  padding: 0;
+  margin: 4;
+  padding: 4;
 }      
 
 .google-map-row {

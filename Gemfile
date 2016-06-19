@@ -4,7 +4,13 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '>= 5.0.0.rc1', '< 5.1'
 
-gem 'bootstrap-sass'
+gem 'font-awesome-sass'
+gem 'bootstrap', '~> 4.0.0.alpha3'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-tether', '>= 1.1.0'
+end
+
 gem 'devise'
 gem 'pg'
 
