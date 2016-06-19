@@ -1,17 +1,59 @@
 <div id="map" class="google-map-canvas" style="background-color: lightgray"></div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9GE8UaA4r9KWATXxIgzkOTti8pXp8fiA" type="text/javascript"></script>
-
-<%# <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9GE8UaA4r9KWATXxIgzkOTti8pXp8fiA&callback=initMap"
-async defer></script> %>
 
 <script type="text/javascript">
 
-		// this is called when the page loads. 
-		// it initializes the map, and creates each marker
+	// this is called when the page loads. 
+	// it initializes the map, and creates each marker
 
-		$(document).ready(function()
-		{   
+	$(document).ready(function()
+	{  
+		///////////////////////////////////////////////
+		//  load the google map api if required      // 
+		///////////////////////////////////////////////
+		function loadScript(src,callback)
+		{
+			var script = document.createElement("script");
+			script.type    = "text/javascript";
+			script.charset = "UTF-8";
+			
+			if (callback) { script.onload = callback; }
+
+			document.getElementsByTagName("head")[0].appendChild(script);
+			script.src = src;
+		}
+
+		///////////////////////////////////////////////
+        // check if the maps api script is already loaded
+		var script_source   = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD9GE8UaA4r9KWATXxIgzkOTti8pXp8fiA&callback=initializeMap';  
+        var script_elements = document.head.getElementsByTagName('script');
+        var script_found    = false;
+
+		for (var i = 0; (!script_found) && (i < script_elements.length); i++)
+		{
+			//console.log(elements[i].src);
+			if (script_elements[i].src == script_source)
+			{
+				script_found = true;
+			}
+		}
+
+		if (script_found)
+		{
+		  initializeMap();
+		}
+		else
+		{
+		  loadScript(script_source, function(){ console.log('google-loader has been loaded, but not the maps-API ');});
+		}
+	});
+
+	/////////////////////////////////////////////// 
+	/////////////////////////////////////////////// 
+    function initializeMap()
+	{
+		    console.log('maps-API has been loaded, ready to use');
+			/////////////////////////////////////////////// 
 		    var map          = null;
 			var mapOptions   = null;
 			var mapDraggable = true; 
@@ -243,7 +285,7 @@ async defer></script> %>
 				  lat = position.coords.latitude;
 				  lng = position.coords.longitude;
 				
-				  console.log('watchPosition reports ' + position.coords.latitude + ' ' + position.coords.longitude);
+				//console.log('watchPosition reports ' + position.coords.latitude + ' ' + position.coords.longitude);
 
 				  record = { user_id: id, latitude: lat, longitude: lng };
 				  hdr = { to: 'server', from: App.endpoint_uuid, type: 'data', subtype: 'update', record: 'position' };
@@ -293,6 +335,6 @@ async defer></script> %>
 				console.log('WOOOOO');
 			    resizeBootstrapMap();
 			});
-      })    
+      }    
 </script>                   
 
