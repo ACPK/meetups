@@ -24,11 +24,17 @@ default: &default
 development:
   <<: *default
 
-  host: localhost
-  database: meetup
- #database: <%= ENV['POSTGRESQL_DATABASE_NAME'] %>
-  username: <%= ENV['POSTGRESQL_DATABASE_USERNAME'] %>
-  password: <%= ENV['POSTGRESQL_DATABASE_PASSWORD'] %>
+#   host: localhost
+#   database: meetup
+#  #database: <%= ENV['POSTGRESQL_DATABASE_NAME'] %>
+#   username: <%= ENV['POSTGRESQL_DATABASE_USERNAME'] %>
+#   password: <%= ENV['POSTGRESQL_DATABASE_PASSWORD'] %>
+
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host:     <%= ENV['RDS_HOSTNAME'] %>
+  port:     <%= ENV['RDS_PORT'] %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -93,5 +99,5 @@ production:
   database: <%= ENV['RDS_DB_NAME'] %>
   username: <%= ENV['RDS_USERNAME'] %>
   password: <%= ENV['RDS_PASSWORD'] %>
-  host: <%= ENV['RDS_HOSTNAME'] %>
-  port: <%= ENV['RDS_PORT'] %>
+  host:     <%= ENV['RDS_HOSTNAME'] %>
+  port:     <%= ENV['RDS_PORT'] %>
