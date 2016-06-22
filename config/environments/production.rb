@@ -37,6 +37,8 @@ Rails.application.configure do
   # Action Cable endpoint configuration
   # config.action_cable.url = 'wss://example.com/cable'
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
+  config.action_cable.url = "ws://meetups-env.2swjp7ep9m.ap-southeast-2.elasticbeanstalk.com/cable"
+  config.action_cable.allowed_request_origins = [ 'http://meetups-env.2swjp7ep9m.ap-southeast-2.elasticbeanstalk.com', /http:\/\/meetups-env.2swjp7ep9m.ap-southeast-2.elasticbeanstalk.com.*/ ]
 
   # Don't mount Action Cable in the main server process.
   # config.action_cable.mount_path = nil
