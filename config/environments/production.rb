@@ -41,7 +41,7 @@ Rails.application.configure do
   config.action_cable.allowed_request_origins = [ 'http://meetups-env.2swjp7ep9m.ap-southeast-2.elasticbeanstalk.com', /http:\/\/meetups-env.2swjp7ep9m.ap-southeast-2.elasticbeanstalk.com.*/ ]
 
   # Don't mount Action Cable in the main server process.
-  # config.action_cable.mount_path = nil
+  config.action_cable.mount_path = nil
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
